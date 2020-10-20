@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container" style="max-width: 700px; align-self: center;">
+<div class="card my-4">
+    <h5 class="card-header">Delete Post</h5>
+    <div class="card-body">
+        <form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
+            <fieldset class="form-group">
+                <p>Are you sure you want to delete the post "{{ object.title }}" ?</p>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
+                <a class="btn btn-outline-secondary" href="{% url 'post-detail' object.id %}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
+{% endblock %}

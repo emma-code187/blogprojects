@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container" style="max-width: 500px; align-self: center;">
+<div class="card my-4">
+    <h5 class="card-header">Leave a Comment:</h5>
+    <div class="card-body">
+        <form method="POST" class="post-form">{% csrf_token %}
+            <!--<div class="form-group">
+                <p>
+                    <label for="id_name">Name:</label>
+                    <input type="text" id="id_name" class="form-control" value="{{ user.username }}" maxlength="30" name="name" readonly>
+                </p>
+            </div>-->
+
+            <div class="form-group">
+                <label for="id_body">Body:</label>
+                <textarea id="id_body" value="" name="body" class="form-control" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="save btn btn-primary">Submit</button>
+
+        </form>
+    </div>
+</div>
+</div>
+
+{% endblock %}

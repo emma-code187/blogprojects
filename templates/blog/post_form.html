@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+<div class="container" style="max-width:700px; align-self: center;">
+<div class="card my-4">
+    <h5 class="card-header">Blog Post:</h5>
+    {% if post is new %}
+    <div class="card-body">
+        <form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
+            <fieldset class="form-group">
+                {{ form|crispy }}
+            </fieldset>
+        <div class="form-group"> 
+            <button class="btn btn-outline-info" type="submit">Post</button>
+        </div>
+        </form>
+    </div>
+    {% else %}
+    <div class="card-body">
+        <form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
+            <fieldset class="form-group">
+                {{ form|crispy }}
+            </fieldset>
+        <div class="form-group"> 
+            <button class="btn btn-outline-info" type="submit">Update</button>
+        </div>
+        </form>
+    </div>
+    {% endif %}
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Blog Entries Column -->
+      <div class="col-md-8">
+
+        <h1 class="my-4">Posts
+        </h1>
+
+        <!-- Blog Post -->
+        {% for post in posts %}
+        <div class="card mb-4">
+        <div class="container" style="max-width: 720px; margin: 10px 0 0 5px;">
+            {% if post.post_image.url == '/media/post.jpg' %}
+            <img class="card-img-top" src="{% static 'img/post.jpg' %}" alt="" width="640" height="360">
+            {% else %}
+            <img class="card-img-top" src="{{ post.post_image.url }}" alt="" width="640" height="360">
+            {% endif %}
+            </div>
+            <div class="card-body"><h2 class="card-title"><a class="card-title" href="{% url 'post-detail' post.id %}">
+                {{ post.title }}
+            </a></h2><p class="card-text">{{ post.content|truncatewords:28 }}   <a class="btn btn-primary"
+             href="{% url 'post-detail' post.id %}"> Read More &rarr;</a></p></div>
+
+             <div class="card-footer text-muted">
+                 {% if post.author.profile.image.url == '/media/default.jpg' %}
+                 <img class="rounded-circle article-img" src="{% static 'img/default.jpg' %}" alt="" width="50" height="50">
+                 {% else %}
+                 <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" alt="" width="50" height="50">
+                 {% endif %}
+                 <a class="mr-2" href="{% url 'user-posts' post.author.username %}">By {{ post.author }}</a>
+                 <small class="text-muted">on {{ post.date_posted|date:"F d, Y" }}</small>
+             </div>
+
+             <div class="container">
+                 <p><a href="{% url 'post-detail' pk=post.pk %}">
+                     {% if post.comments.count == 0 %}
+                     Comment: {{ post.comments.count }}
+                     {% else %}
+                     Comments: {{ post.comments.count }}
+                     {% endif %}
+                 </a></p>
+             </div>
+             </div>
+             {% endfor %}
+        <!-- Pagination -->
+
+        {% if is_paginated %}
+        
+        {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">&larr; Newer</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number}}">Older &rarr;</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+        
+        {% endif %}
+
+      </div>
+
+      <!-- Sidebar Widgets Column -->
+      <div class="col-md-4">
+
+          {% include 'sidebar.html' %}
+        
+      </div>
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.container -->
+<!-- Footer -->
+<footer class="py-5 bg-dark">
+  <div class="container">
+    <p class="m-0 text-center text-white">Copyright &copy; Blog Projects 2020</p>
+  </div>
+  <!-- /.container -->
+</footer>
+
+{% endblock %}

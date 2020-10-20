@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Post Content Column -->
+      <div class="col-lg-8">
+
+        <!-- Title -->
+        <h1 class="mt-4">{{ object.title }}</h1>
+
+        <!-- Author -->
+        <p class="lead">
+            {% if post.author.profile.image.url == '/media/default.jpg' %}
+            <img class="rounded-circle article-img" src="{% static 'img/default.jpg' %}" alt="" width="50" height="50">
+            {% else %}
+            <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" alt="" width="50" height="50">
+            {% endif %}
+          by
+          <a href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+        </p>
+
+        <hr>
+
+        <!-- Date/Time -->
+        <p>Posted on {{ post.date_posted|date:"F d, Y" }}
+            {% if request.user == post.author %}
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Edit</a>
+            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+            {% endif %}
+        </p>
+
+        <hr>
+
+        <!-- Preview Image -->
+        {% if post.post_image.url == '/media/post.jpg' %}
+        <img class="card-img-top" src="{% static 'img/post.jpg' %}" alt="Card image cap" width="640" height="360">
+        {% else %}
+        <img class="card-img-top" src="{{ post.post_image.url }}" alt="Card image cap" width="640" height="360">
+        {% endif %}
+
+        <hr>
+
+        <!-- Post Content -->
+        <p class="lead">{{ object.content }}</p>
+
+        <hr>
+
+        <!-- Comments Form -->
+        <p><a class="btn btn-primary" href="{% url 'add_comment_to_post' pk=post.pk %}">Add Comment</a></p>
+
+        <!-- Single Comment -->
+        {% for comment in post.comments.all %}
+        {% if comment.active == True %}
+        <div class="media mb-4">
+          {% if comment.name.profile.image.url == '/media/default.jpg' %}
+          <img class="d-flex mr-3 rounded-circle" src="{% static 'img/default.jpg' %}" alt="" width="50" height="50">
+          {% else %}
+          <img class="d-flex mr-3 rounded-circle" src="{{ comment.name.profile.image.url }}" alt="" width="50" height="50">
+          {% endif %}
+          <div class="media-body">
+            <h5 class="mt-0">{{ comment.name }}  <small class="ml-2" styles="font-family:all;"> to {% if comment.name == post.author %}self {% else %}{{ post.author.username }}{% endif %}</small></h5>
+            <i>{{ comment.created_date|date:"F d, Y" }}</i>
+            {% if user.is_superuser == True %}
+            <a href="{% url 'comment_remove' pk=comment.pk %}"><span>delete</span></a>
+            <a href="{% url 'comment_block' pk=comment.pk %}"><span>block</span></a>
+            {% endif %}
+            <p>{{ comment.body|linebreaks }}</p>
+          </div>
+        </div>
+        {% endif %}
+        {% empty %}
+        <p>No comments here yet:</p>
+        {% endfor %}
+      </div>
+            
+      <!-- Sidebar Widgets Column -->
+      <div class="col-md-4">
+
+        {% include 'sidebar.html' %}
+        
+      </div>
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.container -->
+
+  {% endblock %}
