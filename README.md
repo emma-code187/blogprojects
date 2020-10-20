@@ -1,2 +1,2 @@
 # blogprojects
-A  Web App built using django and bootstrap
+A  Web app built using django and bootstrap
